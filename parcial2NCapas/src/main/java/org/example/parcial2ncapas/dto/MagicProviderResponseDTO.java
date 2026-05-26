@@ -1,7 +1,6 @@
 package org.example.parcial2ncapas.dto;
 
 import lombok.*;
-import org.example.parcial2ncapas.entity.Type;
 
 @Getter
 @Setter

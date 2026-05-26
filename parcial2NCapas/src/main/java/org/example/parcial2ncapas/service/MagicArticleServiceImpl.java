@@ -1,6 +1,5 @@
 package org.example.parcial2ncapas.service;
 
-import org.example.parcial2ncapas.dto.MagicArticleRequestDTO;
 import org.example.parcial2ncapas.dto.MagicArticleResponseDTO;
 import org.example.parcial2ncapas.entity.MagicArticle;
 import org.example.parcial2ncapas.entity.MagicProvider;
@@ -18,7 +17,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MagicArticleServiceImpl implements MagicArticleService {
+public class MagicArticleServiceImpl
+        implements MagicArticleService {
 
     private final MagicArticleRepository articleRepository;
 
@@ -42,7 +42,9 @@ public class MagicArticleServiceImpl implements MagicArticleService {
                 providerRepository.findById(
                         requestDTO.getProviderId()
                 ).orElseThrow(() ->
-                        new ResourceNotFoundException("Proveedor no encontrado"));
+                        new ResourceNotFoundException(
+                                "Proveedor no encontrado"
+                        ));
 
         // VALIDAR TIPO
         if (provider.getType() != requestDTO.getType()) {
@@ -80,7 +82,8 @@ public class MagicArticleServiceImpl implements MagicArticleService {
         MagicArticle article = articleRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Artículo no encontrado"));
+                                "Artículo no encontrado"
+                        ));
 
         return mapToResponse(article);
     }
@@ -93,7 +96,9 @@ public class MagicArticleServiceImpl implements MagicArticleService {
 
         MagicArticle article = articleRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Artículo no encontrado"));
+                        new ResourceNotFoundException(
+                                "Artículo no encontrado"
+                        ));
 
         if (!article.getName().equalsIgnoreCase(
                 requestDTO.getName())
@@ -102,21 +107,11 @@ public class MagicArticleServiceImpl implements MagicArticleService {
                         requestDTO.getName())
         ) {
 
-            throw new DuplicateResourceException("Ya existe un artículo con ese nombre");
-        }
-
-        MagicProvider provider =
-                providerRepository.findById(
-                        requestDTO.getProviderId()).orElseThrow(() ->
-                        new ResourceNotFoundException("Proveedor no encontrado"));
-
-        // se valida el tipo
-        if (provider.getType() != requestDTO.getType()) {
-
-            throw new BusinessRuleException(
-                    "El tipo del artículo no coincide con el proveedor"
+            throw new DuplicateResourceException(
+                    "Ya existe un artículo con ese nombre"
             );
         }
+
 
         article.setName(requestDTO.getName());
         article.setType(requestDTO.getType());
@@ -128,21 +123,6 @@ public class MagicArticleServiceImpl implements MagicArticleService {
 
         return mapToResponse(updatedArticle);
     }
-
-    @Override
-    public void deleteArticle(Long id) {
-
-        MagicArticle article = articleRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Artículo no encontrado"
-                        ));
-
-        articleRepository.delete(article);
-    }
-
-
-
 
     private MagicArticleResponseDTO mapToResponse(
             MagicArticle article
